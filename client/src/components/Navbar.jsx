@@ -3,9 +3,10 @@ import { assets } from '../assets/assets'
 import { MenuIcon, SearchIcon, TicketPlus, XIcon } from 'lucide-react'
 import {Link, useNavigate} from 'react-router-dom'
 import { useClerk, UserButton, useUser } from '@clerk/clerk-react'
+import { useAppContext } from '../context/AppContext'
 
 const Navbar = () => {
-   
+   const { favoriteMovies } = useAppContext();
 
 
   const[isopen,setisopen]=useState(false)
@@ -15,7 +16,7 @@ const Navbar = () => {
   return (
     <div className='fixed top-0 left-0 z-50 w-full flex flex items-center justify-between px-6 md:px-16 lg:px-36 py-5'>
       <Link to='/' className='max-md:flex-1'>
-      <img src={assets.logo} alt="" className='w-36 h-auto'/>
+      <img src={assets.marvelLogo} alt="" className='w-36 h-auto'/>
       </Link>
 
       <div className={`max-md:absolute max-md:top-0 max-md:left-0 max-md:z-50 
@@ -32,7 +33,18 @@ const Navbar = () => {
         <Link onClick={()=>{scrollTo(0,0); setisopen(false)}} to='/movies'>Movies</Link>
         <Link onClick={()=>{scrollTo(0,0); setisopen(false)}} to='/'>Threaters</Link>
         <Link onClick={()=>{scrollTo(0,0); setisopen(false)}} to='/'>Releases</Link>
-        <Link onClick={()=>{scrollTo(0,0); setisopen(false)}} to='/Favorite'>Favorites</Link>
+
+        {favoriteMovies.length > 0 && (
+          <Link
+            onClick={() => {
+              scrollTo(0, 0);
+              setIsOpen(false);
+            }}
+            to="/favorite"
+          >
+            Favorites
+          </Link>
+        )}
 
       </div>
 

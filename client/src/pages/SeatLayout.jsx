@@ -6,6 +6,7 @@ import { ArrowRightIcon, ClockIcon } from "lucide-react";
 import Loading from "../components/Loading";
 import BlurCircle from '../components/BlurCircle';
 import toast from 'react-hot-toast';
+import { useAppContext } from '../context/AppContext';
 
 
 
@@ -25,15 +26,16 @@ const SeatLayout = () => {
   const [show, setShow] = useState(null);
   const [occupiedSeats, setOccupiedSeats] = useState([]);
   const navigate = useNavigate();
+   const { axios, getToken, user } = useAppContext();
 
   const getShow=async()=>{
-    const show=dummyShowsData.find(show=>show._id===id)
-
-    if(show){
-      setShow({
-        movie:show,
-        dateTime:dummyDateTimeData
-      })
+    try {
+      const { data } = await axios.get(`/api/show/${id}`);
+      if (data.success) {
+        setShow(data);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
   const handleSeatClick = (seatId) => {
@@ -102,7 +104,7 @@ const SeatLayout = () => {
       );
 
       if (data.success) {
-        window.location.href = data.url;
+        window.location.href=data.url;
       } else {
         toast.error(data.message);
       }
@@ -165,7 +167,7 @@ const SeatLayout = () => {
         </div>
 
         <button
-          onClick={()=>navigate('/my-bookings')}
+          onClick={bookTickets}
           className="flex items-center gap-1 mt-20 px-10 py-3 text-sm bg-primary hover:bg-primary-dull transition rounded-full font-medium cursor-pointer active:scale-95"
         >
           Proceed to Checkout
